@@ -29,7 +29,7 @@ train_test_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learni
 models_dir_total <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/Models/Total"
 models_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/Models/Filtered"
 results_dir_total <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/ModelResultsPreCal/Total"
-results_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/0Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/ModelResultsPreCal/Filtered"
+results_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/ModelResultsPreCal/Filtered"
 figures_dir <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Figures/ModelPerformance"
 
 for(dir in c(models_dir_total, models_dir_overlap, results_dir_total, results_dir_overlap, figures_dir)) {
