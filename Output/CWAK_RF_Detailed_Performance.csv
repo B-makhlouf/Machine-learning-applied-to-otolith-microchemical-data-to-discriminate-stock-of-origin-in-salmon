@@ -1,0 +1,5 @@
+"cwak_group","Watershed","n_fish","correct_predictions","accuracy"
+"CWAK","Kusko",162,149,0.919753086419753
+"CWAK","Nush",139,127,0.913669064748201
+"CWAK","Yukon",30,22,0.733333333333333
+"non-CWAK","Yukon",145,142,0.979310344827586

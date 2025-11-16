@@ -1,0 +1,4 @@
+"genetic_group","cwak_group","n_fish","correct_predictions","accuracy"
+"Lower","CWAK",30,22,0.733333333333333
+"Middle","non-CWAK",48,46,0.958333333333333
+"Upper","non-CWAK",97,96,0.989690721649485

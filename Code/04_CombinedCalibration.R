@@ -25,11 +25,11 @@ data_types <- c("RAW", "GAM", "MA")
 analyses <- c("TOTAL", "OVERLAP")
 
 # Input directories
-results_dir_total <- "/Users/benjaminmakhlouf/Research_repos/04_Western_Ak_otolith_stock_discrimination/Output/ModelResultsPreCal/Total"
-results_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/04_Western_Ak_otolith_stock_discrimination/Output/ModelResultsPreCal/Filtered"
+results_dir_total <- here("Output/ModelResultsPreCal/Total")
+results_dir_overlap <- here("Output/ModelResultsPreCal/Filtered")
 
 # Output directory
-output_dir <- "/Users/benjaminmakhlouf/Research_repos/04_Western_Ak_otolith_stock_discrimination/Figures/Calibration Figures"
+output_dir <- here("Figures/Calibration Figures")
 calibrated_models_dir <- file.path(output_dir, "CalibratedModels")
 
 # Create directories
