@@ -22,15 +22,15 @@ set.seed(123)
 data_types <- c("RAW", "GAM", "MA")
 
 # Input directories (where train/test splits already exist)
-train_test_dir_total <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Data/TrainingTesting"
-train_test_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Data/TrainingTesting/Filtered"
+train_test_dir_total <- here("Data", "TrainingTesting")
+train_test_dir_overlap <- here("Data", "TrainingTesting", "Filtered")
 
 # Output directories
-models_dir_total <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/Models/Total"
-models_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/Models/Filtered"
-results_dir_total <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/ModelResultsPreCal/Total"
-results_dir_overlap <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Output/ModelResultsPreCal/Filtered"
-figures_dir <- "/Users/benjaminmakhlouf/Research_repos/Machine-learning-applied-to-otolith-microchemical-data-to-discriminate-stock-of-origin-in-salmon/Figures/ModelPerformance"
+models_dir_total <- here("Output", "Models", "Total")
+models_dir_overlap <- here("Output", "Models", "Filtered")
+results_dir_total <- here("Output", "ModelResultsPreCal", "Total")
+results_dir_overlap <- here("Output", "ModelResultsPreCal", "Filtered")
+figures_dir <- here("Figures", "ModelPerformance")
 
 for(dir in c(models_dir_total, models_dir_overlap, results_dir_total, results_dir_overlap, figures_dir)) {
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -45,8 +45,8 @@ cat("\n=== Checking for required train/test split files ===\n")
 # Check Total analysis files
 total_files_exist <- TRUE
 for (data_type in data_types) {
-  train_file <- file.path(train_test_dir_total, paste0("Train_", data_type, ".csv"))
-  test_file <- file.path(train_test_dir_total, paste0("Test_", data_type, ".csv"))
+  train_file <- here(train_test_dir_total, paste0("Train_", data_type, ".csv"))
+  test_file <- here(train_test_dir_total, paste0("Test_", data_type, ".csv"))
   
   if (!file.exists(train_file)) {
     cat("✗ MISSING:", train_file, "\n")
@@ -66,8 +66,8 @@ for (data_type in data_types) {
 # Check Overlap/Filtered analysis files
 overlap_files_exist <- TRUE
 for (data_type in data_types) {
-  train_file <- file.path(train_test_dir_overlap, paste0("Train_", data_type, ".csv"))
-  test_file <- file.path(train_test_dir_overlap, paste0("Test_", data_type, ".csv"))
+  train_file <- here(train_test_dir_overlap, paste0("Train_", data_type, ".csv"))
+  test_file <- here(train_test_dir_overlap, paste0("Test_", data_type, ".csv"))
   
   if (!file.exists(train_file)) {
     cat("✗ MISSING:", train_file, "\n")
@@ -85,7 +85,7 @@ for (data_type in data_types) {
 }
 
 # Check for Fish_ID_Splits.csv (optional but helpful)
-fish_id_file <- file.path(train_test_dir_total, "Fish_ID_Splits.csv")
+fish_id_file <- here(train_test_dir_total, "Fish_ID_Splits.csv")
 if (file.exists(fish_id_file)) {
   cat("✓ Found: Fish_ID_Splits.csv\n")
   fish_splits <- read.csv(fish_id_file)
@@ -109,8 +109,8 @@ run_analysis <- function(train_test_dir, models_dir, analysis_name, results_dir)
   results <- data.frame()
   
   for (data_type in data_types) {
-    train_file <- file.path(train_test_dir, paste0("Train_", data_type, ".csv"))
-    test_file <- file.path(train_test_dir, paste0("Test_", data_type, ".csv"))
+    train_file <- here(train_test_dir, paste0("Train_", data_type, ".csv"))
+    test_file <- here(train_test_dir, paste0("Test_", data_type, ".csv"))
     
     if (!file.exists(train_file) || !file.exists(test_file)) next
     
@@ -133,13 +133,13 @@ run_analysis <- function(train_test_dir, models_dir, analysis_name, results_dir)
       set.seed(123)
       
       workflow_obj <- workflow() %>% add_recipe(base_recipe) %>% add_model(models[[model_name]]) %>% fit(train_data)
-      saveRDS(workflow_obj, file.path(models_dir, paste0(data_type, "_", model_name, "_model.rds")))
+      saveRDS(workflow_obj, here(models_dir, paste0(data_type, "_", model_name, "_model.rds")))
       
       predictions <- workflow_obj %>% predict(test_data) %>% bind_cols(test_data %>% select(Watershed))
       pred_probs <- workflow_obj %>% predict(test_data, type = "prob")
       predictions_with_probs <- predictions %>% bind_cols(pred_probs) %>% mutate(Dataset = data_type, Model = model_name, Correct = Watershed == .pred_class)
       
-      write.csv(predictions_with_probs, file.path(results_dir, paste0(data_type, "_", model_name, "_", analysis_name, "_predictions.csv")), row.names = FALSE)
+      write.csv(predictions_with_probs, here(results_dir, paste0(data_type, "_", model_name, "_", analysis_name, "_predictions.csv")), row.names = FALSE)
       
       accuracy <- mean(predictions$Watershed == predictions$.pred_class)
       f1_score <- predictions %>% f_meas(truth = Watershed, estimate = .pred_class) %>% pull(.estimate)
@@ -210,8 +210,8 @@ create_combined_heatmaps <- function(results_total, results_overlap) {
           plot.margin = margin(20, 25, 20, 25)) +
     annotate("segment", x = 0.5, xend = 3.5, y = 3.5, yend = 3.5, color = "white", size = 2)
   
-  ggsave(file.path(figures_dir, "Combined_Accuracy_Heatmap.pdf"), accuracy_plot, width = 10, height = 6, dpi = 300, bg = "white")
-  ggsave(file.path(figures_dir, "Combined_F1Score_Heatmap.pdf"), f1_plot, width = 10, height = 6, dpi = 300, bg = "white")
+  ggsave(here(figures_dir, "Combined_Accuracy_Heatmap.pdf"), accuracy_plot, width = 10, height = 6, dpi = 300, bg = "white")
+  ggsave(here(figures_dir, "Combined_F1Score_Heatmap.pdf"), f1_plot, width = 10, height = 6, dpi = 300, bg = "white")
   
   cat("✓ Combined heatmaps saved\n")
   return(list(accuracy_plot = accuracy_plot, f1_plot = f1_plot))
@@ -224,8 +224,8 @@ combined_plots <- create_combined_heatmaps(results_total, results_overlap)
 ################################################################################
 
 create_gam_rf_figures <- function(results_dir_total, results_dir_overlap) {
-  gam_rf_total_file <- file.path(results_dir_total, "GAM_RF_TOTAL_predictions.csv")
-  gam_rf_overlap_file <- file.path(results_dir_overlap, "GAM_RF_OVERLAP_predictions.csv")
+  gam_rf_total_file <- here(results_dir_total, "GAM_RF_TOTAL_predictions.csv")
+  gam_rf_overlap_file <- here(results_dir_overlap, "GAM_RF_OVERLAP_predictions.csv")
   
   if (!file.exists(gam_rf_total_file) || !file.exists(gam_rf_overlap_file)) return(NULL)
   
@@ -301,7 +301,7 @@ create_gam_rf_figures <- function(results_dir_total, results_dir_overlap) {
     ) +
     coord_equal()
   
-  ggsave(file.path(figures_dir, "GAM_RF_Confusion_Matrix.pdf"), confusion_plot, width = 12, height = 6, dpi = 300, bg = "white")
+  ggsave(here(figures_dir, "GAM_RF_Confusion_Matrix.pdf"), confusion_plot, width = 12, height = 6, dpi = 300, bg = "white")
   
   cat("✓ GAM RF confusion matrix saved\n")
   return(confusion_plot)
