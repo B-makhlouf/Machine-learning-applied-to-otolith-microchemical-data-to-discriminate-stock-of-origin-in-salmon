@@ -70,3 +70,17 @@
 - **GAM_RF_Restricted_Performance_Line_Plot.png** - Threshold performance for restricted dataset
 - **GAM_RF_Combined_Performance_Line_Plot.png** - Side-by-side comparison of both datasets
 
+# Files 
+
+NatalToMarine_Processed_GAM.csv: trimmed LA-ICPMS data gam smoothed 
+NatalToMarine_Processed_RAW.csv: timmed LA-ICPMS data raw data (no ts smoothing) 
+All_Yukon_Genetics.csv: Genetic posterior assignments for all yukon individuals following methods in Makhlouf et al., 2025 
+Fish_ID_Splits.csv: Fish ID splits for training and testing sets, used to make sure the same individuals are in all testing/train sets. 
+Test_GAM.csv: Testing dataset of GAM smoothed ts 
+Test_MA.csv: Testing dataset of Moving average smoothed ts 
+Test_RAW.csv: Testing dataset of raw (non smoothed) ts 
+Train_GAM.csv: Training dataset of GAM smoothed ts 
+Train_MA.csv: Training dataset of MA smoothed ts 
+Train_RAW.csv: Training dataset of raw (non_smoothed) ts 
+
+
